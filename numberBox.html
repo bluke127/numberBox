@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>numberBox</title>
+    <link href="numberBox.css" styl"text/css" rel="stylesheet">
+    <script src="numberBox.js"></script>
+  </head>
+  <body>
+    <div id="popUpWrap">
+      <div id="pop">
+        <div id="textPop"></div>
+        <div id="inputPop"><input class='setNum' type='text' value="" onkeyup="checkNum(0)" autofocus></input> X <input class='setNum' type='text' value="" onkeyup="checkNum(1)"></input></div>
+        <div id="submitPop"><button onClick="submit()">SubMit</button></div>
+      </div>
+    </div>
+    <div id="wrap">
+      <!-- numberBox -->
+      <div id="container">
+        <div id="boxWrap">
+          <ul id="box"></ul>
+        </div>
+        <div id="answer">
+          <div>&lt;</div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
