@@ -13,6 +13,8 @@ li {
 }
 #container {
   width: 100%;
+  height:100%;
+  min-height:650px;
   padding: 30px 0;
   background-color: aqua;
   position: relative;
@@ -22,7 +24,7 @@ li {
   width: 100%;
   height: 100%;
   transition: right;
-  transition-duration: 2s;
+  transition-duration: .5s;
   right:0;
   position: fixed;
   z-index: 1;
@@ -45,8 +47,10 @@ li {
 #inputPop input:hover,#inputPop input:focus{background: #fff;}
 #submitPop button{background-color: transparent; color:#fff; font-size:25px; border:none; cursor:pointer;}
 /*box*/
-#box{width:500px; height:500px; margin:0 auto; position:relative;}
+#box{width:500px; margin:0 auto; }
+#box:after{display:block; clear:both; content:""}
 .boxElement{float:left; box-sizing: border-box; border:1px solid brown; font-size:1em; text-align: center;}
+
 .boxElement:hover{transform: scale(1.2); transition:transform 0.2s; background-color:#fff;}
 /*collect*/
 #collect{margin:30px auto; text-align: center; display: none;}
