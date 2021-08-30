@@ -21,20 +21,35 @@ li {
 #popUpWrap {
   width: 100%;
   height: 100%;
+  transition: right;
+  transition-duration: 2s;
+  right:0;
   position: fixed;
   z-index: 1;
   background-color: rgba(100, 100, 100, 0.5);
 }
 #pop {
   width: 50%;
-  height: 150px;
+  height: 250px;
+  text-align:center;
   outline: 1px solid orange;
-  position: fixed;
+  position: absolute;
   z-index: 2;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
 }
+#textPop{width:100%; height:15%; padding:2% 0;}
+#inputPop{width:100%; height:40%; padding:2% 0;}
+#inputPop input{width:50px; height:50px; border-radius:25px; background-color:gray; font-size: 24px; border:none; text-align:center;}
+#inputPop input:hover,#inputPop input:focus{background: #fff;}
+#submitPop button{background-color: transparent; color:#fff; font-size:25px; border:none; cursor:pointer;}
+/*box*/
+#box{width:500px; height:500px; margin:0 auto; position:relative;}
+.boxElement{float:left; box-sizing: border-box; border:1px solid brown; font-size:1em; text-align: center;}
+.boxElement:hover{transform: scale(1.2); transition:transform 0.2s; background-color:#fff;}
+/*collect*/
+#collect{margin:30px auto; text-align: center; display: none;}
 /*answer*/
 #answer {
   width: 30px;
@@ -51,3 +66,21 @@ li {
   background-color: gray;
   color: #fff;
 }
+#answerText{text-align:center;}
+
+/*result*/
+#result{
+  width: 100%;
+  height: 100%;
+  transition: right;
+  transition-duration: 2s;
+  right:0;
+  top:0;
+  position: fixed;
+  z-index: 1;
+  background-color: rgba(100, 100, 100, 0.5);
+  right:-2999px;
+}
+#resultInner{width:40%; text-align:center; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);}
+#resultInner img{max-width:100%;}
+#resultText{p}

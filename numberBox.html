@@ -9,7 +9,7 @@
     <script src="numberBox.js"></script>
   </head>
   <body>
-    <div id="popUpWrap">
+    <div id="popUpWrap" onclick="closeM()">
       <div id="pop">
         <div id="textPop"></div>
         <div id="inputPop"><input class='setNum' type='text' value="" onkeyup="checkNum(0)" autofocus></input> X <input class='setNum' type='text' value="" onkeyup="checkNum(1)"></input></div>
@@ -22,8 +22,13 @@
         <div id="boxWrap">
           <ul id="box"></ul>
         </div>
-        <div id="answer">
-          <div>&lt;</div>
+        <div id="collect"><label>선택한 숫자</label><span id="collection"></span></div>
+        <div id="answer" onclick="showAnswer()">
+          <div id="answerInner">&gt;</div>
+        </div>
+        <div id="result" onclick="closeM()">
+          <div id="resultInner"><div id="imgWrap"><img src="img/thumbsUp.png" alt="answer"/><p id="resultText" onclick="retry"></p></div></div>
+          
         </div>
       </div>
     </div>
