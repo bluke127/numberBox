@@ -32,7 +32,6 @@ window.onload = function () {
   d.getElementById("textPop").innerText = "상자의 열과 행을 입력해주세요";
 };
 //엔터와 클릭으로 실행할 수 있다
-function submit() {
   NUM = { ans: [], ques: [] };
   STORE_NUM = [];
   TRY_ANSWER = [];
@@ -76,21 +75,20 @@ function submit() {
   }
   console.log(NUM, answer, "변절전3");
   createNumberBox();
-  console.log(NUM, answer, "변절전4");
+  console.log(NUM,answer, "변절전4");
   //팝업창 제거
-  d.getElementById("popUpWrap").style.right = -3999 + "px";
   //정답 보여주기
   d.getElementById(
     "inputPop"
   ).innerHTML = `<span class='answerText'>${answer}</span>`;
   d.getElementById("collect").style.display = "block";
   console.log(NUM, ROW, COL, ROW * COL, mapAns, answer, "우왕");
+  
+  
   //화살표 바꿔주는
   arrowFlag();
   CLOSE_FLAG=true;
   //answer의 타입이 숫자기 때문에 숫자하나하나 배열에 들어가지 않기때문에 문자로 바꿔서 넣음!
-}
-
 //처음에 submit 할때 boxRowCol 입력한 값을 넣게 했으나 정규식 확인을 효율적으로 할 수 있어 keyup 에 넣음
 function checkNum(index) {
   var number = d.querySelectorAll(".setNum");
@@ -259,7 +257,7 @@ function getTryAnswer(i) {
   } else {
     var text = [...TRY_ANSWER];
     li.innerText = text;
-    setTryAnswer();
+    setTryAnswer(IS_CLOSURE);
   }
   //TRY_ANSWER와 ans의 길이가 같고, 마지막 값까지 같다? 그럼 통과가 됨, 한번이라도 틀리면 길이가 틀려지고, 마지막값도 같다면 완벽히 일치!
   if (
@@ -287,12 +285,13 @@ function getTryAnswer(i) {
     "시작은???"
   );
 }
-var setTryAnswer = function () {
+var setTryAnswer = function (c) {
   console.log(STORE_NUM, NUM.ans, NUM.ques, TRY_ANSWER, IS_CLOSURE, "시작");
-  function updateCloser() {
+  IS_CLOSURE=c
+  var updateCloser=function() {
     IS_CLOSURE++;
   }
-  return updateCloser();
+  return updateCloser;
 };
 
 /**answer */
