@@ -71,39 +71,49 @@ async function submit() {
   createNumberBox();
   //팝업창 제거
   isClosePop = true;
-  setTimeout(() => {
-    closePopup("pop");
-    setTime();
-  }, 2000);
-  //정답 보여주기
-  var answerView = `${g_num.ans}`;
-  answerView = answerView.replaceAll(",", " ");
-  d.getElementById(
-    "inputPop"
-  ).innerHTML = `<span class='answerText'>${answerView}</span>`;
-  d.getElementById("collect").style.display = "block";
-  //화살표 바꿔주는
-  setArrow();
-  // }
-  //answer의 타입이 숫자기 때문에 숫자하나하나 배열에 들어가지 않기때문에 문자로 바꿔서 넣음!
+  try {
+    setTimeout(() => {
+      closePopup("pop");
+      setTime();
+    }, 2000);
+  } finally {
+    await returnOrigin();
+    //정답 보여주기
+    var answerView = `${g_num.ans}`;
+    answerView = answerView.replaceAll(",", " ");
+    d.getElementById(
+      "inputPop"
+    ).innerHTML = `<span class='answerText'>${answerView}</span>`;
+    d.getElementById("collect").style.display = "block";
+    //화살표 바꿔주는
+    setArrow();
+    // }
+    //answer의 타입이 숫자기 때문에 숫자하나하나 배열에 들어가지 않기때문에 문자로 바꿔서 넣음!
+  }
 }
 //setimeout 질문사항
-
 async function setTime() {
   for (var i = 0; i < g_setTimeIndex.length; i++) {
     setBlue(i);
   }
 }
+function returnOrigin() {
+  for (var i = 0; i < g_setTimeIndex.length; i++) {
+    BOX_ELEMENT[i].style.color = "#000";
+  }
+}
 var SIndex;
-var setBlue = async function (i) {
-  SIndex = i;
-  var setInnerBlue = await function () {
-    SIndex = g_setTimeIndex[SIndex];
-    BOX_ELEMENT[SIndex].style.color = "blue";
+var setBlue = function (num) {
+  // console.log(SIndex0, g_setTimeIndex[SIndex], g_setTimeIndex, "같아야하는애");
+  var setInnerBlue = function () {
+    SIndex = num;
+    SIndex0 = g_setTimeIndex[SIndex];
+    console.log(SIndex0, g_setTimeIndex[SIndex], BOX_ELEMENT[SIndex], "?");
+    BOX_ELEMENT[SIndex0].style.color = "blue";
   };
   var setInnerBlueResult = setTimeout(() => {
-    setInnerBlue(i);
-  }, 1000 * i);
+    setInnerBlue(num);
+  }, 1000 * num);
   return setInnerBlueResult;
 };
 //처음에 submit 할때 boxRowCol 입력한 값을 넣게 했으나 정규식 확인을 효율적으로 할 수 있어 keyup 에 넣음
