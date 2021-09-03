@@ -9,9 +9,9 @@
     <script src="numberBox.js"></script>
   </head>
   <body>
-    <div id="popUpWrap" onclick="closeM('pop')">
+    <div id="popUpWrap" onclick="closePopup('pop')">
       <div id="pop">
-        <div id="textPop"></div>
+        <div id="textPop">상자의 열과 행을 입력해주세요</div>
         <div id="inputPop"><input class='setNum' type='text' value="" onkeyup="checkNum(0)" autofocus></input> X <input class='setNum' type='text' value="" onkeyup="checkNum(1)"></input></div>
         <div id="submitPop"><button onClick="submit()">SubMit</button></div>
       </div>
@@ -26,7 +26,7 @@
         <div id="answer" onclick="showAnswer()">
           <div id="answerInner">&gt;</div>
         </div>
-        <div id="result" onclick="closeM('result')">
+        <div id="result" onclick="closePopup('result')">
           <div id="resultInner"><div id="imgWrap"><img src="img/thumbsUp.png" alt="answer"/><p id="resultText" onclick="retry()"></p></div></div>
           
         </div>
