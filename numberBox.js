@@ -4,6 +4,9 @@ let BOX_ROW_N_COL = [];
 let ROW = null;
 //열
 let COL = null;
+//ROW와 COL 중에 큰 수와 작은 수
+let bigger;
+let small;
 //정답의 숫자들을 하나하나를 배열로 담음
 let NUM = { ans: [], ques: [] };
 //NUM.ques를 랜덤으로 담아줄, 또 순차적으로 li에 뿌려줄 배열
@@ -12,7 +15,7 @@ let STORE_NUM = [];
 let TRY_ANSWER = [];
 //사용자가 몇 번 클릭했는지 세어주며, 이 변수로 TRY_ANSWER와 ans의 값을 비교 예정
 let IS_CLOSURE = 0;
-let CLOSE_FLAG=false;
+let CLOSE_FLAG = false;
 //클릭시 화살표 모양 바뀌는 flag
 let answerFlag = false;
 //결과 img경로
@@ -32,11 +35,12 @@ window.onload = function () {
   d.getElementById("textPop").innerText = "상자의 열과 행을 입력해주세요";
 };
 //엔터와 클릭으로 실행할 수 있다
+async function submit() {
   NUM = { ans: [], ques: [] };
   STORE_NUM = [];
   TRY_ANSWER = [];
   d.getElementById("inputPop").innerHTML = insertNum;
-  d.getElementById("submitPop").style.display = 'none';
+  d.getElementById("submitPop").style.display = "none";
   console.log(NUM, STORE_NUM, "설마한다 2");
   //배열이 모두 true인 확인
   const isTrue = (value) => value === true;
@@ -75,41 +79,47 @@ window.onload = function () {
   }
   console.log(NUM, answer, "변절전3");
   createNumberBox();
-  console.log(NUM,answer, "변절전4");
+  console.log(NUM, answer, "변절전4");
   //팝업창 제거
-  //정답 보여주기
-  d.getElementById(
-    "inputPop"
-  ).innerHTML = `<span class='answerText'>${answer}</span>`;
-  d.getElementById("collect").style.display = "block";
-  console.log(NUM, ROW, COL, ROW * COL, mapAns, answer, "우왕");
-  
-  
-  //화살표 바꿔주는
-  arrowFlag();
-  CLOSE_FLAG=true;
+  try {
+    CLOSE_FLAG = true;
+    setTimeout(() => closeM("pop"), 2000);
+  } finally {
+    //정답 보여주기
+    d.getElementById(
+      "inputPop"
+    ).innerHTML = `<span class='answerText'>${answer}</span>`;
+    d.getElementById("collect").style.display = "block";
+    console.log(NUM, ROW, COL, ROW * COL, mapAns, answer, "우왕");
+    //화살표 바꿔주는
+    arrowFlag();
+  }
   //answer의 타입이 숫자기 때문에 숫자하나하나 배열에 들어가지 않기때문에 문자로 바꿔서 넣음!
+}
+
 //처음에 submit 할때 boxRowCol 입력한 값을 넣게 했으나 정규식 확인을 효율적으로 할 수 있어 keyup 에 넣음
 function checkNum(index) {
   var number = d.querySelectorAll(".setNum");
   //백스페이스와 새로고침 누를 때는 이 메서드 실행하지 말아주세요
-  if (event.keyCode == 116 || event.keyCode===8) {return false;}
+  if (event.keyCode == 116 || event.keyCode === 8) {
+    return false;
+  }
   number[index].value = regexNumber(number[index].value);
-  
+
   //정규식 test를 거치고 return 한 값을 value로 받음
   if (number[index].value === "") {
     alert(errorMessage);
     submitFlag[index] = false;
     return;
   }
-  console.log(BOX_ROW_N_COL,TRY_ANSWER,"트라이엔설0")
+  console.log(BOX_ROW_N_COL, TRY_ANSWER, "트라이엔설0");
   //입력한 값을 BOX_ROW_N_COL에
   BOX_ROW_N_COL[index] = number[index].value;
-  console.log(BOX_ROW_N_COL,TRY_ANSWER,"트라이엔설1")
+  console.log(BOX_ROW_N_COL, TRY_ANSWER, "트라이엔설1");
   //박스 게임 생성 배열 true
   submitFlag[index] = true;
-  console.log(TRY_ANSWER,"트라이엔설2")
-  console.log(submitFlag,TRY_ANSWER, "트라이엔설3");
+  console.log(TRY_ANSWER, "트라이엔설2");
+  console.log(submitFlag, TRY_ANSWER, "트라이엔설3");
   //엔터 칠때 구현 메서드 첫번째 인풋일땐 두번째 인풋으로 이동, 두번째 인풋일땐 submit으로;
   if (event.keyCode === 13) {
     if (index === 0) {
@@ -118,8 +128,8 @@ function checkNum(index) {
       submit();
     }
   }
-  console.log(TRY_ANSWER,"트라이엔설4")
-  console.log(TRY_ANSWER,"트라이엔설")
+  console.log(TRY_ANSWER, "트라이엔설4");
+  console.log(TRY_ANSWER, "트라이엔설");
 }
 //숫자만 받는 메서드
 function regexNumber(value) {
@@ -156,13 +166,13 @@ function createNumberBox() {
   //       console.log(NUM.ques,2)
   //   }
 
-  let bigger;
-
   // let randomIndex=createRandomNum()
   if (ROW >= COL) {
     bigger = ROW;
+    small = COL;
   } else {
     bigger = COL;
+    small = ROW;
   }
   console.log(ROW, COL, "test1");
   var i = 0;
@@ -225,12 +235,13 @@ function insertRandomNum() {
       [i].setAttribute("onclick", `getTryAnswer(${i})`);
   }
 
-  console.log(STORE_NUM.length, li.length, STORE_NUM, NUM, ":text");
+  console.log(STORE_NUM.length, li.length, STORE_NUM, NUM, bigger, ":text");
   for (var i = 0; i < li.length; i++) {
     console.log(d.getElementsByClassName("boxElement")[i], "헬프");
     d.getElementsByClassName("boxElement")[i].style.width = 500 / ROW + "px";
     d.getElementsByClassName("boxElement")[i].style.height = 500 / ROW + "px";
-    d.getElementsByClassName("boxElement")[i].style.fontSize = 60 / (ROW*COL/4) + "px";
+    d.getElementsByClassName("boxElement")[i].style.fontSize =
+      60 / (small / 2) + "px";
     d.getElementsByClassName("boxElement")[i].style.lineHeight =
       500 / ROW + "px";
   }
@@ -287,16 +298,16 @@ function getTryAnswer(i) {
 }
 var setTryAnswer = function (c) {
   console.log(STORE_NUM, NUM.ans, NUM.ques, TRY_ANSWER, IS_CLOSURE, "시작");
-  IS_CLOSURE=c
-  var updateCloser=function() {
+  IS_CLOSURE = c;
+  function updateCloser() {
     IS_CLOSURE++;
   }
-  return updateCloser;
+  return updateCloser();
 };
 
 /**answer */
 function arrowFlag() {
-  console.log(NUM,TRY_ANSWER, "ㅊ죙값");
+  console.log(NUM, TRY_ANSWER, "ㅊ죙값");
   if (answerFlag === true) {
     d.getElementById("answerInner").innerText = `>`;
     answerFlag = false;
@@ -307,29 +318,31 @@ function arrowFlag() {
 }
 function showAnswer() {
   d.getElementById("popUpWrap").style.right = 0 + "px";
-  answerFlag===false;
-  arrowFlag()
-  answerFlag===true;
+  answerFlag === false;
+  arrowFlag();
+  answerFlag === true;
 }
 function closeM(flag) {
   d.getElementById("result").style.right = -2999 + "px";
-  console.log(CLOSE_FLAG,flag,"클로즈 플레그")
-  if(flag==='pop' && CLOSE_FLAG===true){d.getElementById("popUpWrap").style.right = -2999 + "px";}
+  console.log(CLOSE_FLAG, flag, "클로즈 플레그");
+  if (flag === "pop" && CLOSE_FLAG === true) {
+    d.getElementById("popUpWrap").style.right = -2999 + "px";
+  }
 }
 
 function retry() {
   BOX_ROW_N_COL = NUM.ans = NUM.ques = STORE_NUM = TRY_ANSWER = [];
   IS_CLOSURE = 0;
-  CLOSE_FLAG=false;
+  CLOSE_FLAG = false;
   answerFlag = false;
   resultSrc = resultMessage = errorMessage = "";
   submitFlag = [false, false];
   //에러 메세지를 저장해서, 오류 생기면 alert(errorMessage)
   d.getElementById("popUpWrap").style.right = "0";
   d.getElementById("textPop").innerText = "상자의 열과 행을 입력해주세요";
-  d.getElementById('inputPop').innerHTML=insertNum;
+  d.getElementById("inputPop").innerHTML = insertNum;
   d.getElementById("box").innerHTML = "";
-  d.getElementById("submitPop").style.display = 'block';
+  d.getElementById("submitPop").style.display = "block";
   d.getElementById("collect").style.display = "none";
   console.log(NUM, "설마한다");
 }
