@@ -71,36 +71,54 @@ async function submit() {
   createNumberBox();
   //팝업창 제거
   isClosePop = true;
-  try {
-    setTimeout(() => {
-      closePopup("pop");
-      setTime();
-    }, 2000);
-  } finally {
-    await returnOrigin();
-    //정답 보여주기
-    var answerView = `${g_num.ans}`;
-    answerView = answerView.replaceAll(",", " ");
-    d.getElementById(
-      "inputPop"
-    ).innerHTML = `<span class='answerText'>${answerView}</span>`;
-    d.getElementById("collect").style.display = "block";
-    //화살표 바꿔주는
-    setArrow();
-    // }
-    //answer의 타입이 숫자기 때문에 숫자하나하나 배열에 들어가지 않기때문에 문자로 바꿔서 넣음!
-  }
+  var test = function () {
+    Promise(
+      resolve(
+        setTimeout(() => {
+          closePopup("pop");
+          setTime();
+        }, 2000)
+      )
+    );
+  };
+  test().then(() => {
+    for (var i = 0; i < g_setTimeIndex.length; i++) {
+      BOX_ELEMENT[i].style.color = "#000";
+    }
+  });
+  //정답 보여주기
+  var answerView = `${g_num.ans}`;
+  answerView = answerView.replaceAll(",", " ");
+  d.getElementById(
+    "inputPop"
+  ).innerHTML = `<span class='answerText'>${answerView}</span>`;
+  d.getElementById("collect").style.display = "block";
+  //화살표 바꿔주는
+  setArrow();
+  // }
+  //answer의 타입이 숫자기 때문에 숫자하나하나 배열에 들어가지 않기때문에 문자로 바꿔서 넣음!
 }
+
 //setimeout 질문사항
-async function setTime() {
-  for (var i = 0; i < g_setTimeIndex.length; i++) {
-    setBlue(i);
-  }
+function setTime() {
+  console.log("헤이");
+  var setForBlue = function () {
+    console.log("9");
+    for (var i = 0; i < g_setTimeIndex.length; i++) {
+      setBlue(i);
+    }
+  };
+  return setForBlue();
 }
 function returnOrigin() {
-  for (var i = 0; i < g_setTimeIndex.length; i++) {
-    BOX_ELEMENT[i].style.color = "#000";
-  }
+  console.log("수행1");
+  var test = function () {
+    for (var i = 0; i < g_setTimeIndex.length; i++) {
+      BOX_ELEMENT[i].style.color = "#000";
+    }
+    console.log(BOX_ELEMENT[i], "수행");
+  };
+  return test();
 }
 var SIndex;
 var setBlue = function (num) {
