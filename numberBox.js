@@ -71,21 +71,10 @@ async function submit() {
   createNumberBox();
   //팝업창 제거
   isClosePop = true;
-  var test = function () {
-    Promise(
-      resolve(
-        setTimeout(() => {
-          closePopup("pop");
-          setTime();
-        }, 2000)
-      )
-    );
-  };
-  test().then(() => {
-    for (var i = 0; i < g_setTimeIndex.length; i++) {
-      BOX_ELEMENT[i].style.color = "#000";
-    }
-  });
+  /** 안되는 부분 ( 닫게 만들어주는 메서드와 함께 문제가 있는 setTime이란 메서드를 붙임 setTime은 정답의 숫자글씨를 파란색으로 보여줌(setForBlue),이후 returnOrigin을 통해 검은 색의 글씨로 바꿔줌  ) */
+  await asyncMethod();
+  await returnOrigin();
+  /** ########### */
   //정답 보여주기
   var answerView = `${g_num.ans}`;
   answerView = answerView.replaceAll(",", " ");
@@ -98,27 +87,32 @@ async function submit() {
   // }
   //answer의 타입이 숫자기 때문에 숫자하나하나 배열에 들어가지 않기때문에 문자로 바꿔서 넣음!
 }
-
+/** 안되는 부분 ( 닫게 만들어주는 메서드와 함께 문제가 있는 setTime이란 메서드를 붙임 setTime은 정답의 숫자글씨를 파란색으로 보여줌(setForBlue),이후 returnOrigin을 통해 검은 색의 글씨로 바꿔줌  ) */
+function asyncMethod() {
+  setTimeout(() => {
+    closePopup("pop");
+    setTime();
+  }, 0);
+}
 //setimeout 질문사항
 function setTime() {
-  console.log("헤이");
   var setForBlue = function () {
-    console.log("9");
     for (var i = 0; i < g_setTimeIndex.length; i++) {
       setBlue(i);
     }
   };
   return setForBlue();
 }
-function returnOrigin() {
-  console.log("수행1");
-  var test = function () {
+function returnOrigin(i) {
+  console.log(i);
+  var a = function () {
     for (var i = 0; i < g_setTimeIndex.length; i++) {
       BOX_ELEMENT[i].style.color = "#000";
     }
     console.log(BOX_ELEMENT[i], "수행");
   };
-  return test();
+  //리턴한건 처음에 then을 썻는데 거기에 프라미스 결과값이 없어서 안나오나 해서 retunr값을 붙여봄
+  return a();
 }
 var SIndex;
 var setBlue = function (num) {
