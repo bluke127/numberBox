@@ -98,7 +98,7 @@ function asyncMethod() {
 function setTime() {
   var setForBlue = function () {
     for (var i = 0; i < g_setTimeIndex.length; i++) {
-      setBlue(i);
+      setBlue(g_setTimeIndex[i]);
     }
   };
   return setForBlue();
@@ -114,14 +114,9 @@ function returnOrigin(i) {
   //리턴한건 처음에 then을 썻는데 거기에 프라미스 결과값이 없어서 안나오나 해서 retunr값을 붙여봄
   return a();
 }
-var SIndex;
 var setBlue = function (num) {
-  // console.log(SIndex0, g_setTimeIndex[SIndex], g_setTimeIndex, "같아야하는애");
   var setInnerBlue = function () {
-    SIndex = num;
-    SIndex0 = g_setTimeIndex[SIndex];
-    console.log(SIndex0, g_setTimeIndex[SIndex], BOX_ELEMENT[SIndex], "?");
-    BOX_ELEMENT[SIndex0].style.color = "blue";
+    BOX_ELEMENT[num].style.color = "blue";
   };
   var setInnerBlueResult = setTimeout(() => {
     setInnerBlue(num);
@@ -215,7 +210,9 @@ function shuffleNum(a) {
         g_setTimeIndex[x] = i;
       }
       i++;
-    } else {
+    }
+    //한번 quesCopy[x]값이 이미 나온적이 있어서 null 되어있을땐 한번더 랜덤으로!
+    else {
       var x = parseInt(Math.random() * quesCopy.length);
     }
   }
