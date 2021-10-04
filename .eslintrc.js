@@ -1,27 +1,37 @@
 module.exports = {
-    "env": {
-        "browser": true,
-        "es2020": true
+    root: true,
+    env: {
+        node: true,
     },
-    // "extends": "eslint:recommended",
-    "parserOptions": {
-        "ecmaVersion": 11,
-        "sourceType": "module"
+
+    extends: ['eslint:recommended', 'airbnb', 'plugin:prettier/recommended'],
+    parserOptions: {
+        parser: 'babel-eslint',
     },
-    'rules': {
-        'indent': [
+    rules: {
+        'no-console': 'error',
+        // "no-console": process.env.NODE_ENV === "production" ? "error" : "off",
+        // "no-debugger": process.env.NODE_ENV === "production" ? "error" : "off"
+        'prettier/prettier': [
             'error',
-            4
+            {
+                singleQuote: true,
+                semi: false,
+                useTabs: false,
+                tabWidth: 4,
+                trailingComma: 'all',
+                printWidth: 80,
+                bracketSpacing: true,
+                arrowParens: 'avoid',
+            },
         ],
-        'semi': [
-            'error',
-            'always'
-        ],
-        "object-curly-newline":['error','always'],
+        indent: ['error', 4],;;;;;;;
+        semi: ['error', 'always'],
         'no-trailing-spaces': 0,
         'keyword-spacing': 0,
-        'no-multiple-empty-lines': true,
+        'no-unused-vars': 1,
+        'no-multiple-empty-lines': 0,
         'space-before-function-paren': 0,
-        'eol-last': 0
-    }
+        'eol-last': 0,
+    },
 }

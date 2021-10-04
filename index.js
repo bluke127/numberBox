@@ -1,4 +1,5 @@
 
+
 import data from "./store/store.js"
 //자주 쓰는 클래스네임
 let BOX_ELEMENT = document.getElementsByClassName("boxElement")
@@ -7,7 +8,7 @@ let insertInput =
   "<input class='setNum' type='text' value='' onkeyup='checkNum(0)' autofocus/> X <input class='setNum' type='text' value='' onkeyup='checkNum(1)'/>"
 
 //엔터와 클릭으로 실행할 수 있다
-window.onload=(()=>{console.log(checkNum())})()
+window.onload=(()=>{console.log(data)})()
 async function submit() { 
     g_num = {
         ans: [], ques: [] 

@@ -9,14 +9,64 @@
 
     <title>numberBox</title>
     <link href="numberBox.css" styl"text/css" rel="stylesheet">
-    <script src="./dist/main.js"></script>
+    <script src="./dist/main.js">
+    </script>
+    <script>
+       
+    console.log(data)
+  //처음에 submit 할때 boxRowCol 입력한 값을 넣게 했으나 정규식 확인을 효율적으로 할 수 있어 keyup 에 넣음
+  function checkNum(index) {
+      var number = document.querySelectorAll(".setNum")
+      number[index].value = regexNumber(number[index].value)
+
+      //정규식 test를 거치고 return 한 값을 value로 받음
+      if (number[index].value === "") {
+          alert(errorMessage)
+          isSubmit[index] = false
+          return
+      }
+      //입력한 값을 data.rowNCol에
+      data.rowNCol[index] = number[index].value
+      //박스 게임 생성 배열 true
+      isSubmit[index] = true
+      //엔터 칠때 구현 메서드 첫번째 인풋일땐 두번째 인풋으로 이동, 두번째 인풋일땐 submit으로;
+      if (event.keyCode === 13) {
+          if (index === 0) {
+              number[1].focus()
+          } else {
+              submit()
+          }
+      }
+  }
+  //숫자만 받는 메서드
+  function regexNumber(value) {
+      var regex = /^[0-9]/g
+      if (!value) {
+          errorMessage = "숫자를 입력해주세요"
+          return ""
+      }
+      var flag = regex.test(value)
+      if (!flag) {
+          errorMessage = "숫자만 입력하세요"
+          //만일 숫자가 아니라면 공백을 리턴,,
+          return ""
+      } else if (value.length > 1) {
+          errorMessage = "9이하의 숫자만 입력하세요"
+          //만일 숫자가 아니라면 공백을 리턴,,
+          return ""
+      } else {
+      //숫자면 value를 그대로 리턴
+          return value
+      }
+    }
+    </script>
     
   <script defer src="main.js"></script></head>
   <body>
     <div id="popUpWrap" onclick="closePopup('pop')">
       <div id="pop">
         <div id="textPop">상자의 열과 행을 입력해주세요</div>
-        <div id="inputPop"><input class='setNum' type='text' value="" onkeyup="checkNum(0)" autofocus></input> X <input class='setNum' type='text' value="" onkeyup="checkNum(1)"></input></div>
+        <div id="inputPop"><input class='setNum' type='text' value="" oninput="checkNum(0)" autofocus></input> X <input class='setNum' type='text' value="" oninput="checkNum(1)"></input></div>
         <div id="submitPop"><button onClick="submit()">SubMit</button></div>
       </div>
     </div>
