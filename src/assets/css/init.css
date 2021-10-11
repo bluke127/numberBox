@@ -1,0 +1,12 @@
+/*초기화*/
+* {
+  margin: 0;
+  padding: 0;
+}
+
+li {
+  list-style: none;
+}
+html {
+  background-color: antiquewhite;
+}

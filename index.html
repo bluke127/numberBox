@@ -5,15 +5,17 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>numberBox</title>
-    <link href="numberBox.css" styl"text/css" rel="stylesheet">
-    <script src="numberBox.js"></script>
+    <link href="./src/assets/css/index.css" rel="stylesheet" type="text/css" >
+    <link href="./src/assets/css/init.css" rel="stylesheet" type="text/css" >
+    <script src="index.js"></script>
   </head>
   <body>
     <div id="popUpWrap" onclick="closePopup('pop')">
       <div id="pop">
         <div id="textPop">상자의 열과 행을 입력해주세요</div>
-        <div id="inputPop"><input class='setNum' type='text' value="" onkeyup="checkNum(0)" autofocus></input> X <input class='setNum' type='text' value="" onkeyup="checkNum(1)"></input></div>
-        <div id="submitPop"><button onClick="submit()">SubMit</button></div>
+        <div class="inputPop setNumArea"><input class='setNum' type='text' value="" onkeyup="checkNum(0,event)" autofocus></input> X <input class='setNum' type='text' value="" onkeyup="checkNum(1,event)"></input></div>
+        <div class="inputPop answerView"><span class='answerText'></span></div>  
+        <div id="submitPop"><button onClick="insertNumber()">SubMit</button></div>
       </div>
     </div>
     <div id="wrap">
@@ -27,8 +29,7 @@
           <div id="answerInner">&gt;</div>
         </div>
         <div id="result" onclick="closePopup('result')">
-          <div id="resultInner"><div id="imgWrap"><img src="img/thumbsUp.png" alt="answer"/><p id="resultText" onclick="retry()"></p></div></div>
-          
+          <div id="resultInner"><div id="imgWrap"><img src="./src/assets/img/thumbsUp.png" alt="answer"/><p id="resultText" onclick="retry()"></p></div></div>
         </div>
       </div>
     </div>

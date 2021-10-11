@@ -1,15 +1,3 @@
-/*초기화*/
-* {
-  margin: 0;
-  padding: 0;
-}
-
-li {
-  list-style: none;
-}
-html {
-  background-color: antiquewhite;
-}
 /*wrap*/
 #wrap {
   width: 100%;
@@ -53,12 +41,15 @@ html {
   font-size: 24px;
   color: bisque;
 }
-#inputPop {
+.inputPop {
   width: 100%;
   height: 40%;
   padding: 2% 0;
 }
-#inputPop input,
+.inputPop.answerView {
+  display: none;
+}
+.inputPop input,
 .answerText {
   width: 50px;
   height: 50px;
@@ -69,15 +60,15 @@ html {
   border: none;
   text-align: center;
 }
-#inputPop .answerText {
+.inputPop .answerText {
   width: auto;
   padding-left: 2%;
   padding-right: 2%;
   display: inline-block;
   text-align: center;
 }
-#inputPop input:hover,
-#inputPop input:focus {
+.inputPop input:hover,
+.inputPop input:focus {
   background: #fff;
 }
 #submitPop button {
