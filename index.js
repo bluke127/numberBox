@@ -30,17 +30,17 @@ let isCol = false;
 let passRowNCol = [isRow, isCol];
 //에러 메세지를 저장해서, 오류 생기면 alert(errorMessage)
 let errorMessage = "";
-let d = document;
 //자주 쓰는 클래스네임
 let BOX_ELEMENT = document.getElementsByClassName("boxElement");
 //추후에 다시 num을 셋팅할때 쓰기 위해 마크업했을 당시 만들었던 input
 let insertInput =
   "<input class='setNum' type='text' value='' onkeyup='checkNum(0,event)' autofocus> X <input class='setNum' type='text' value='' onkeyup='checkNum(1,event)'>";
 
-function changeText(area, text) {
+function changeText(area, text,i) {
+  if(!i){i=0}
   document.getElementById(area)
     ? (document.getElementById(area).innerText = text)
-    : (document.getElementsByClassName(area)[0].innerText = text);
+    : (document.getElementsByClassName(area)[i].innerText = text);
 }
 function showNhideArea(area, flag) {
   console.log(
@@ -54,18 +54,17 @@ function showNhideArea(area, flag) {
 }
 //랜던 함수를 추출하는 메서드
 /** 이 메서드를 쓰는 부분에서 질문, 10-11에 보낸 카톡 내용 */
-const getRandomNum = function (count, option) {
-  console.log(num);
-  let num = [];
+const setRandomNum = function (count, option,limit) {
+  let num=[];
   while (true) {
     let randomNum = Math.floor(Math.random() * 10);
-    if (!option.duplication) {
-      for (let i = 0; i < count; i++) {
+    if (!option.duplication &&!limit) {
+          for (let i = 0; i < count; i++) {
         randomNum = Math.floor(Math.random() * 10);
         num.push(randomNum);
       }
       break;
-    } else {
+    } else if(option.duplication &&!limit) {
       randomNum = Math.floor(Math.random() * 10);
       if (!num.includes(randomNum)) {
         num.push(randomNum);
@@ -75,6 +74,15 @@ const getRandomNum = function (count, option) {
       if (num.length === count) {
         break;
       }
+    } else if(limit){
+      if(randomNum>=limit){
+        continue
+      }else{
+        num.push(randomNum);
+      }
+      if(num.length===count){
+        break;
+      } 
     }
   }
   return num;
@@ -82,7 +90,6 @@ const getRandomNum = function (count, option) {
 
 //엔터와 클릭으로 실행할 수 있다
 async function insertNumber() {
-  console.log(num);
   document.getElementById("submitPop").style.display = "none";
   if (!Boolean(passRowNCol)) {
     alert("입력값을 확인해주세요");
@@ -104,9 +111,12 @@ async function insertNumber() {
   // for (var i = 0; i < answerLength; i++) {
   //   num.answer.push(mapAns.substring(i, i + 1));
   // }
-  num.question = getRandomNum(row * col, { duplication: false });
+  num.question = setRandomNum(row * col, { duplication: false });
   num.answer = num.question.slice(answerLength);
-  console.log(num);
+  let indexForStore=setRandomNum(row * col, { duplication: false },row * col);
+  for(let ii=0; ii<row*col; ii++){
+    storeNum.push(num.question[indexForStore[ii] ])
+  }
   createNumberBox();
   //팝업창 제거
   isClosePop = true;
@@ -120,7 +130,6 @@ async function insertNumber() {
   // }
   //answer의 타입이 숫자기 때문에 숫자하나하나 배열에 들어가지 않기때문에 문자로 바꿔서 넣음!
   //입력하고 바뀌는 text
-  console.log(typeof `${num.answer}`, typeof num.answer.join(","));
   changeText("textPop", "정답은???");
   showNhideArea("answerView", "block");
   changeText("answerText", `${num.answer}`);
@@ -214,31 +223,9 @@ function regexNumber(value) {
 
 //랜덤으로 num.question을 STORE_num에 배치,, 이후 storeNum에서 공간값 순서로 숫자li에 배치
 //메서드 진행은 NUM.question의 복제 배열이 모두 null되면 끝남
-function shuffleNum(a) {
-  var i = 0;
-  //a에 num.question을 넣고 복제,, 기존 배열이 망가지면 안된다고 판단
-  var quesCopy = [...a];
-  while (storeNum.length < quesCopy.length) {
-    var x = parseInt(Math.random() * quesCopy.length);
-    if (quesCopy[x] !== null) {
-      storeNum[i] = quesCopy[x];
-      quesCopy[x] = null;
-      //setTimeout용
-      if (x < num.answer.length) {
-        setTimeIndex[x] = i;
-      }
-      i++;
-    }
-    //한번 quesCopy[x]값이 이미 나온적이 있어서 null 되어있을땐 한번더 랜덤으로!
-    else {
-      var x = parseInt(Math.random() * quesCopy.length);
-    }
-  }
-}
 //상자 생성
 function createNumberBox() {
   var li = document.getElementById("box").getElementsByTagName("li");
-  shuffleNum(num.question);
   for (var i = 0; i < storeNum.length; i++) {
     let element = `<li class='boxElement'>${storeNum[i]}</li>`;
     if (BOX_ELEMENT.length <= 0) {
