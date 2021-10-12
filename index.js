@@ -36,8 +36,10 @@ let BOX_ELEMENT = document.getElementsByClassName("boxElement");
 let insertInput =
   "<input class='setNum' type='text' value='' onkeyup='checkNum(0,event)' autofocus> X <input class='setNum' type='text' value='' onkeyup='checkNum(1,event)'>";
 
-function changeText(area, text,i) {
-  if(!i){i=0}
+function changeText(area, text, i) {
+  if (!i) {
+    i = 0;
+  }
   document.getElementById(area)
     ? (document.getElementById(area).innerText = text)
     : (document.getElementsByClassName(area)[i].innerText = text);
@@ -54,17 +56,17 @@ function showNhideArea(area, flag) {
 }
 //랜던 함수를 추출하는 메서드
 /** 이 메서드를 쓰는 부분에서 질문, 10-11에 보낸 카톡 내용 */
-const setRandomNum = function (count, option,limit) {
-  let num=[];
+const setRandomNum = function (count, option, limit) {
+  let num = [];
   while (true) {
     let randomNum = Math.floor(Math.random() * 10);
-    if (!option.duplication &&!limit) {
-          for (let i = 0; i < count; i++) {
+    if (!option.duplication && !limit) {
+      for (let i = 0; i < count; i++) {
         randomNum = Math.floor(Math.random() * 10);
         num.push(randomNum);
       }
       break;
-    } else if(option.duplication &&!limit) {
+    } else if (option.duplication && !limit) {
       randomNum = Math.floor(Math.random() * 10);
       if (!num.includes(randomNum)) {
         num.push(randomNum);
@@ -74,15 +76,15 @@ const setRandomNum = function (count, option,limit) {
       if (num.length === count) {
         break;
       }
-    } else if(limit){
-      if(randomNum>=limit){
-        continue
-      }else{
+    } else if (limit) {
+      if (randomNum >= limit) {
+        continue;
+      } else {
         num.push(randomNum);
       }
-      if(num.length===count){
+      if (num.length === count) {
         break;
-      } 
+      }
     }
   }
   return num;
@@ -112,17 +114,26 @@ async function insertNumber() {
   //   num.answer.push(mapAns.substring(i, i + 1));
   // }
   num.question = setRandomNum(row * col, { duplication: false });
-  num.answer = num.question.slice(answerLength);
-  let indexForStore=setRandomNum(row * col, { duplication: false },row * col);
-  for(let ii=0; ii<row*col; ii++){
-    storeNum.push(num.question[indexForStore[ii] ])
+  num.answer = num.question.slice(0, answerLength);
+  let indexForStore = setRandomNum(
+    row * col,
+    { duplication: false },
+    row * col
+  );
+  for (let ii = 0; ii < row * col; ii++) {
+    storeNum.push(num.question[indexForStore[ii]]);
   }
   createNumberBox();
   //팝업창 제거
-  isClosePop = true;
+  console.log(isClosePop, "?");
+  setTimeout(function () {
+    console.log(isClosePop);
+    isClosePop = true;
+  }, 1000);
+  console.log(isClosePop, "!");
   /** 안되는 부분 ( 닫게 만들어주는 메서드와 함께 문제가 있는 setTime이란 메서드를 붙임 setTime은 정답의 숫자글씨를 파란색으로 보여줌(setForBlue),이후 returnOrigin을 통해 검은 색의 글씨로 바꿔줌  ) */
-  await asyncMethod();
-  await returnOrigin();
+  // await asyncMethod();
+  // await returnOrigin();
   /** ########### */
   //정답 보여주기
   //화살표 바꿔주는
@@ -137,11 +148,10 @@ async function insertNumber() {
   showNhideArea("collect", "block");
 }
 /** 안되는 부분 ( 닫게 만들어주는 메서드와 함께 문제가 있는 setTime이란 메서드를 붙임 setTime은 정답의 숫자글씨를 파란색으로 보여줌(setForBlue),이후 returnOrigin을 통해 검은 색의 글씨로 바꿔줌  ) */
-function asyncMethod() {
-  setTimeout(() => {
-    closePopup("pop");
-    setTime();
-  }, 0);
+function asyncMethod(func, delay) {
+  console.log(func, delay);
+  setTimeout(func, delay);
+  console.log(typeof func, delay);
 }
 //setimeout 질문사항
 function setTime() {
