@@ -124,43 +124,41 @@ async function insertNumber() {
     storeNum.push(num.question[indexForStore[ii]]);
   }
   createNumberBox();
-  //팝업창 제거
-  console.log(isClosePop, "?");
-  setTimeout(function () {
-    console.log(isClosePop);
-    isClosePop = true;
-  }, 1000);
-  console.log(isClosePop, "!");
-  /** 안되는 부분 ( 닫게 만들어주는 메서드와 함께 문제가 있는 setTime이란 메서드를 붙임 setTime은 정답의 숫자글씨를 파란색으로 보여줌(setForBlue),이후 returnOrigin을 통해 검은 색의 글씨로 바꿔줌  ) */
-  // await asyncMethod();
-  // await returnOrigin();
-  /** ########### */
-  //정답 보여주기
-  //화살표 바꿔주는
   setArrow();
-  // }
-  //answer의 타입이 숫자기 때문에 숫자하나하나 배열에 들어가지 않기때문에 문자로 바꿔서 넣음!
-  //입력하고 바뀌는 text
   changeText("textPop", "정답은???");
   showNhideArea("answerView", "block");
   changeText("answerText", `${num.answer}`);
   showNhideArea("setNumArea", "none");
   showNhideArea("collect", "block");
+  await asyncMethod();
+  setTime();
 }
 /** 안되는 부분 ( 닫게 만들어주는 메서드와 함께 문제가 있는 setTime이란 메서드를 붙임 setTime은 정답의 숫자글씨를 파란색으로 보여줌(setForBlue),이후 returnOrigin을 통해 검은 색의 글씨로 바꿔줌  ) */
-function asyncMethod(func, delay) {
-  console.log(func, delay);
-  setTimeout(func, delay);
-  console.log(typeof func, delay);
+function asyncMethod() {
+  return new Promise((resolve) => {
+    setTimeout(function () {
+      closePopup("pop");
+    }, 1000);
+    resolve((isClosePop = true));
+  });
 }
 //setimeout 질문사항
 function setTime() {
-  var setForBlue = function () {
-    for (var i = 0; i < setTimeIndex.length; i++) {
-      setBlue(setTimeIndex[i]);
-    }
-  };
-  return setForBlue();
+  for (let i = 0; i < storeNum.length; i++) {
+    setTimeIndex.push(
+      storeNum.filter((e, index) => {
+        e === num.answer[i];
+        return index;
+      })[0]
+    );
+  }
+  console.log(setTimeIndex, "인덱스랍니다");
+  // var setForBlue = function () {
+  //   for (var i = 0; i < setTimeIndex.length; i++) {
+  //     setBlue(setTimeIndex[i]);
+  //   }
+  // };
+  // return setForBlue();
 }
 function returnOrigin(i) {
   console.log(i);
