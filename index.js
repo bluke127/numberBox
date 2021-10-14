@@ -130,8 +130,7 @@ async function insertNumber() {
   changeText("answerText", `${num.answer}`);
   showNhideArea("setNumArea", "none");
   showNhideArea("collect", "block");
-  await asyncMethod();
-  setTime();
+  zzz;
 }
 /** 안되는 부분 ( 닫게 만들어주는 메서드와 함께 문제가 있는 setTime이란 메서드를 붙임 setTime은 정답의 숫자글씨를 파란색으로 보여줌(setForBlue),이후 returnOrigin을 통해 검은 색의 글씨로 바꿔줌  ) */
 function asyncMethod() {
