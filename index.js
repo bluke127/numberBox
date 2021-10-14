@@ -36,10 +36,8 @@ let BOX_ELEMENT = document.getElementsByClassName("boxElement");
 let insertInput =
   "<input class='setNum' type='text' value='' onkeyup='checkNum(0,event)' autofocus> X <input class='setNum' type='text' value='' onkeyup='checkNum(1,event)'>";
 
-function changeText(area, text, i) {
-  if (!i) {
-    i = 0;
-  }
+function changeText(area, text,i) {
+  if(!i){i=0}
   document.getElementById(area)
     ? (document.getElementById(area).innerText = text)
     : (document.getElementsByClassName(area)[i].innerText = text);
@@ -56,17 +54,17 @@ function showNhideArea(area, flag) {
 }
 //랜던 함수를 추출하는 메서드
 /** 이 메서드를 쓰는 부분에서 질문, 10-11에 보낸 카톡 내용 */
-const setRandomNum = function (count, option, limit) {
-  let num = [];
+const setRandomNum = function (count, option,limit) {
+  let num=[];
   while (true) {
     let randomNum = Math.floor(Math.random() * 10);
-    if (!option.duplication && !limit) {
-      for (let i = 0; i < count; i++) {
+    if (!option.duplication &&!limit) {
+          for (let i = 0; i < count; i++) {
         randomNum = Math.floor(Math.random() * 10);
         num.push(randomNum);
       }
       break;
-    } else if (option.duplication && !limit) {
+    } else if(option.duplication &&!limit) {
       randomNum = Math.floor(Math.random() * 10);
       if (!num.includes(randomNum)) {
         num.push(randomNum);
@@ -76,15 +74,15 @@ const setRandomNum = function (count, option, limit) {
       if (num.length === count) {
         break;
       }
-    } else if (limit) {
-      if (randomNum >= limit) {
-        continue;
-      } else {
+    } else if(limit){
+      if(randomNum>=limit){
+        continue
+      }else{
         num.push(randomNum);
       }
-      if (num.length === count) {
+      if(num.length===count){
         break;
-      }
+      } 
     }
   }
   return num;
@@ -114,14 +112,10 @@ async function insertNumber() {
   //   num.answer.push(mapAns.substring(i, i + 1));
   // }
   num.question = setRandomNum(row * col, { duplication: false });
-  num.answer = num.question.slice(0, answerLength);
-  let indexForStore = setRandomNum(
-    row * col,
-    { duplication: false },
-    row * col
-  );
-  for (let ii = 0; ii < row * col; ii++) {
-    storeNum.push(num.question[indexForStore[ii]]);
+  num.answer = num.question.slice(answerLength);
+  let indexForStore=setRandomNum(row * col, { duplication: false },row * col);
+  for(let ii=0; ii<row*col; ii++){
+    storeNum.push(num.question[indexForStore[ii] ])
   }
   createNumberBox();
   setArrow();
