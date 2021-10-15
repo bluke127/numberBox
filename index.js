@@ -10,14 +10,15 @@ let small;
 //정답의 숫자들을 하나하나를 배열로 담음
 let num = { answer: [], question: [] };
 //num.ques를 랜덤으로 담아줄, 또 순차적으로 li에 뿌려줄 배열
-let storeNum = [];
-//정답의 배열의 각 숫자가 storeNum에 몇 번째 div에 배치되는지!
-let setTimeIndex = [];
+let boxValue = [];
 //사용자가 클릭한 숫자의 배열
 let userAnswer = [];
 //사용자가 몇 번 클릭했는지 세어주며, 이 변수로 userAnswer와 answer의 값을 비교 예정
-let isAnsIndex = 0;
+let answerIndex = 0;
+//팝업을 닫아줄 변수
 let isClosePop = false;
+//비동기를 통해 답이 몇번째 상자에 들어갔는지 확인해주는 객체변수
+let setShowingAnswer = { answerOrder: [], boxValueOrder: [] };
 //클릭시 화살표 모양 바뀌는 flag
 let isAnswer = false;
 //결과 img경로
@@ -32,12 +33,12 @@ let passRowNCol = [isRow, isCol];
 let errorMessage = "";
 //자주 쓰는 클래스네임
 let BOX_ELEMENT = document.getElementsByClassName("boxElement");
-//추후에 다시 num을 셋팅할때 쓰기 위해 마크업했을 당시 만들었던 input
-let insertInput =
-  "<input class='setNum' type='text' value='' onkeyup='checkNum(0,event)' autofocus> X <input class='setNum' type='text' value='' onkeyup='checkNum(1,event)'>";
 
-function changeText(area, text,i) {
-  if(!i){i=0}
+//style 관련 메서드
+function changeText(area, text, i) {
+  if (!i) {
+    i = 0;
+  }
   document.getElementById(area)
     ? (document.getElementById(area).innerText = text)
     : (document.getElementsByClassName(area)[i].innerText = text);
@@ -52,20 +53,37 @@ function showNhideArea(area, flag) {
     ? (document.getElementById(area).style.display = flag)
     : (document.getElementsByClassName(area)[0].style.display = flag);
 }
+function showNhideArea(area, flag) {
+  console.log(
+    document.getElementById(area),
+    document.getElementsByClassName(area)[0],
+    flag
+  );
+  document.getElementById(area)
+    ? (document.getElementById(area).style.display = flag)
+    : (document.getElementsByClassName(area)[0].style.display = flag);
+}
+
+function setColor(area, i) {
+  console.log(document.getElementById(area).children);
+  document.getElementById(area).children[i].style.color = "blue";
+  document.getElementById(area).children[i].style.fontSize = "60px";
+}
 //랜던 함수를 추출하는 메서드
 /** 이 메서드를 쓰는 부분에서 질문, 10-11에 보낸 카톡 내용 */
-const setRandomNum = function (count, option,limit) {
-  let num=[];
+const setRandomNum = function (count, option, limit) {
+  console.log(count);
+  let num = [];
   while (true) {
-    let randomNum = Math.floor(Math.random() * 10);
-    if (!option.duplication &&!limit) {
-          for (let i = 0; i < count; i++) {
+    if (!option.duplication && !limit) {
+      let randomNum = Math.floor(Math.random() * 10);
+      for (let i = 0; i < count; i++) {
         randomNum = Math.floor(Math.random() * 10);
         num.push(randomNum);
       }
       break;
-    } else if(option.duplication &&!limit) {
-      randomNum = Math.floor(Math.random() * 10);
+    } else if (option.duplication && !limit) {
+      let randomNum = Math.floor(Math.random() * 10);
       if (!num.includes(randomNum)) {
         num.push(randomNum);
       } else {
@@ -74,15 +92,20 @@ const setRandomNum = function (count, option,limit) {
       if (num.length === count) {
         break;
       }
-    } else if(limit){
-      if(randomNum>=limit){
-        continue
-      }else{
-        num.push(randomNum);
-      }
-      if(num.length===count){
+    } else if (option.duplication && limit) {
+      let randomNum = Math.floor(Math.random() * 100) % limit;
+      if (num.length < count) {
+        if (num.includes(randomNum % limit)) {
+          console.log(num.length, count, num, limit, "yes");
+          continue;
+        } else if (!num.includes(randomNum % limit)) {
+          console.log("no");
+          num.push(randomNum % limit);
+        }
+      } else {
+        console.log("break");
         break;
-      } 
+      }
     }
   }
   return num;
@@ -90,7 +113,6 @@ const setRandomNum = function (count, option,limit) {
 
 //엔터와 클릭으로 실행할 수 있다
 async function insertNumber() {
-  document.getElementById("submitPop").style.display = "none";
   if (!Boolean(passRowNCol)) {
     alert("입력값을 확인해주세요");
     return;
@@ -101,78 +123,88 @@ async function insertNumber() {
   let answerLength;
   row > col ? (answerLength = row) : (answerLength = col);
   //큰 숫자 만큼 정답의 숫자 갯수가 정해짐!
-  //숫자 생성 시작
-  var mapAns = Math.random() * 10;
-  //반면 상자에 들어갈 갯수는 정답을 포함해서 다른 숫자들이 들어가야함! randomNumber의 뒤에 숫자들을 응용함, .을 제외하고 row와 col의 갯수만큼
-  //num.question 숫자(배열의 인자들)을 바탕으로 박스의 NUMber를 설정
-  // mapAns = mapAns.toString(10).replace(".", "");
-  // num.question.push(...mapAns);
-  // console.log(num.question);
-  // for (var i = 0; i < answerLength; i++) {
-  //   num.answer.push(mapAns.substring(i, i + 1));
-  // }
+
   num.question = setRandomNum(row * col, { duplication: false });
-  num.answer = num.question.slice(answerLength);
-  let indexForStore=setRandomNum(row * col, { duplication: false },row * col);
-  for(let ii=0; ii<row*col; ii++){
-    storeNum.push(num.question[indexForStore[ii] ])
+  num.answer = num.question.slice(0, answerLength);
+  let indexForStore = setRandomNum(row * col, { duplication: true }, row * col);
+  console.log(indexForStore);
+  for (let ii = 0; ii < row * col; ii++) {
+    if (indexForStore[ii] < num.answer.length) {
+      setShowingAnswer.boxValueOrder.push(ii);
+      setShowingAnswer.answerOrder.push(indexForStore[ii]);
+    }
+    boxValue.push(num.question[indexForStore[ii]]);
   }
+  returnIndex(setShowingAnswer.answerOrder);
+  console.log(returnIndex(setShowingAnswer.answerOrder), setShowingAnswer, "?");
+
   createNumberBox();
   setArrow();
   changeText("textPop", "정답은???");
-  showNhideArea("answerView", "block");
   changeText("answerText", `${num.answer}`);
+  showNhideArea("submitPop", "none");
+  showNhideArea("answerView", "block");
   showNhideArea("setNumArea", "none");
   showNhideArea("collect", "block");
-  zzz;
+  await asyncMethod();
+  for (let i in setShowingAnswer.answerOrder) {
+    console.log(
+      setShowingAnswer.boxValueOrder[
+        returnIndex(setShowingAnswer.answerOrder)[i]
+      ]
+    );
+    await setTime(
+      setShowingAnswer.boxValueOrder[
+        returnIndex(setShowingAnswer.answerOrder)[i]
+      ]
+    );
+  }
+  console.log(setShowingAnswer);
 }
 /** 안되는 부분 ( 닫게 만들어주는 메서드와 함께 문제가 있는 setTime이란 메서드를 붙임 setTime은 정답의 숫자글씨를 파란색으로 보여줌(setForBlue),이후 returnOrigin을 통해 검은 색의 글씨로 바꿔줌  ) */
 function asyncMethod() {
   return new Promise((resolve) => {
     setTimeout(function () {
       closePopup("pop");
+      resolve();
     }, 1000);
-    resolve((isClosePop = true));
+    isClosePop = true;
   });
 }
-//setimeout 질문사항
-function setTime() {
-  for (let i = 0; i < storeNum.length; i++) {
-    setTimeIndex.push(
-      storeNum.filter((e, index) => {
-        e === num.answer[i];
-        return index;
-      })[0]
-    );
+//new) 어떤 공간값을 담은 배열 속에 값들을 0부터 배열의 길이의 값이 있는 공간값을 저장 ex)[2,0,1]=>[1,2,0]
+function returnIndex(array) {
+  let newA = [];
+  for (let z = 0; z < array.length; z++) {
+    for (let v in array) {
+      if (array[v] === z) {
+        newA.push(v);
+      }
+    }
   }
-  console.log(setTimeIndex, "인덱스랍니다");
-  // var setForBlue = function () {
-  //   for (var i = 0; i < setTimeIndex.length; i++) {
-  //     setBlue(setTimeIndex[i]);
-  //   }
-  // };
-  // return setForBlue();
+  return newA;
+}
+
+//setimeout 질문사항
+function setTime(i) {
+  return new Promise((resolve) => {
+    setTimeout(function () {
+      setColor("box", i);
+      returnOrigin(i);
+      resolve();
+    }, 500);
+  });
 }
 function returnOrigin(i) {
-  console.log(i);
-  var a = function () {
-    for (var i = 0; i < setTimeIndex.length; i++) {
+  return new Promise((resolve) =>
+    setTimeout(() => {
+      BOX_ELEMENT[i].style.fontSize = "1em";
       BOX_ELEMENT[i].style.color = "#000";
-    }
-    console.log(BOX_ELEMENT[i], "수행");
-  };
-  //리턴한건 처음에 then을 썻는데 거기에 프라미스 결과값이 없어서 안나오나 해서 retunr값을 붙여봄
-  return a();
+      resolve();
+    }, 300)
+  );
 }
-var setBlue = function (num) {
-  var setInnerBlue = function () {
-    BOX_ELEMENT[num].style.color = "blue";
-  };
-  var setInnerBlueResult = setTimeout(() => {
-    setInnerBlue(num);
-  }, 1000 * num);
-  return setInnerBlueResult;
-};
+//리턴한건 처음에 then을 썻는데 거기에 프라미스 결과값이 없어서 안나오나 해서 retunr값을 붙여봄
+
 //처음에 submit 할때 boxRowCol 입력한 값을 넣게 했으나 정규식 확인을 효율적으로 할 수 있어 keyup 에 넣음
 function checkNum(index) {
   let number = document.querySelectorAll(".setNum");
@@ -222,18 +254,18 @@ function regexNumber(value) {
   return value;
 }
 
-//랜덤으로 num.question을 STORE_num에 배치,, 이후 storeNum에서 공간값 순서로 숫자li에 배치
+//랜덤으로 num.question을 STORE_num에 배치,, 이후 boxValue에서 공간값 순서로 숫자li에 배치
 //메서드 진행은 NUM.question의 복제 배열이 모두 null되면 끝남
 //상자 생성
 function createNumberBox() {
   var li = document.getElementById("box").getElementsByTagName("li");
-  for (var i = 0; i < storeNum.length; i++) {
-    let element = `<li class='boxElement'>${storeNum[i]}</li>`;
+  for (var i = 0; i < boxValue.length; i++) {
+    let element = `<li class='boxElement'>${boxValue[i]}</li>`;
     if (BOX_ELEMENT.length <= 0) {
       document.getElementById("box").innerHTML = element;
     } else {
       var e = document.createElement("li");
-      var t = document.createTextNode(`${storeNum[i]}`);
+      var t = document.createTextNode(`${boxValue[i]}`);
       e.appendChild(t);
       document.getElementById("box").appendChild(e);
     }
@@ -256,25 +288,25 @@ function createNumberBox() {
 }
 //사용자가 클릭한 숫자를 userAnswer배열에 넣는 메서드
 function getTryingAnswer(i) {
-  userAnswer.push(storeNum[i]);
+  userAnswer.push(boxValue[i]);
   var li = document.getElementById("collection");
   var resultText = document.getElementById("resultText");
   //클로저변수를 이용해서 클릭할때마다 클로저의 변수는 ++, 이전에 answer와 입력한 값을 비교함
   //만일 사용자가 틀린 답을 입력할때,
-  if (num.answer[isAnsIndex] !== userAnswer[isAnsIndex]) {
+  if (num.answer[answerIndex] !== userAnswer[answerIndex]) {
     document.getElementById("result").style.right = 0 + "px";
     alert("진실의 방으로");
-    resultSrc = "punch.png";
+    resultSrc = "./src/assets/img/punch.png";
     resultMessage = "한 판 더 하실?";
     //변수 초기화
     userAnswer = [];
-    isAnsIndex = 0;
+    answerIndex = 0;
     li.innerText = "";
     //맞게 입력하면 closure ++할 메서드 실행! 선택한 숫자에는 입력한 숫자게 계속 들어감
   } else {
     var text = [...userAnswer];
     li.innerText = text;
-    tryAnswer(isAnsIndex);
+    tryAnswer(answerIndex);
   }
   //userAnswer와 answer의 길이가 같고, 마지막 값까지 같다? 그럼 통과가 됨, 한번이라도 틀리면 길이가 틀려지고, 마지막값도 같다면 완벽히 일치!
   if (
@@ -282,22 +314,20 @@ function getTryingAnswer(i) {
     userAnswer.length === num.answer.length
   ) {
     document.getElementById("result").style.right = 0 + "px";
-    resultSrc = "thumbsUp.png";
+    resultSrc = "./src/assets/img/thumbsUp.png";
     resultMessage = "잇츠 굿~~~";
     //변수 초기화
     userAnswer = [];
-    isAnsIndex = 0;
+    answerIndex = 0;
     li.innerText = "";
   }
-  document
-    .getElementsByTagName("img")[0]
-    .setAttribute("src", `img/${resultSrc}`);
+  document.getElementsByTagName("img")[0].setAttribute("src", `${resultSrc}`);
   resultText.innerText = resultMessage;
 }
-var tryAnswer = function (c) {
-  isAnsIndex = c;
+const tryAnswer = function (c) {
+  answerIndex = c;
   function updateCloser() {
-    isAnsIndex++;
+    answerIndex++;
   }
   return updateCloser();
 };
@@ -328,21 +358,28 @@ function closePopup(flag) {
 function retry() {
   num = { answer: [], question: [] };
   rowNCol = [];
-  storeNum = [];
+  boxValue = [];
   userAnswer = [];
-  isAnsIndex = 0;
+  answerIndex = 0;
   isClosePop = false;
   isAnswer = false;
+  setShowingAnswer = { answerOrder: [], boxValueOrder: [] };
   resultSrc = "";
   resultMessage = "";
   errorMessage = "";
-  isSubmit = [false, false];
+  let isRow = false;
+  let isCol = false;
+  let passRowNCol = [isRow, isCol];
   //에러 메세지를 저장해서, 오류 생기면 alert(errorMessage)
   document.getElementById("popUpWrap").style.right = "0";
   document.getElementById("textPop").innerText =
     "상자의 열과 행을 입력해주세요";
-  document.getElementById("inputPop").innerHTML = insertInput;
+  showNhideArea("setNumArea", "block");
+  showNhideArea("answerView", "none");
+  showNhideArea("collect", "none");
+  showNhideArea("submitPop", "block");
   document.getElementById("box").innerHTML = "";
-  document.getElementById("submitPop").style.display = "block";
-  document.getElementById("collect").style.display = "none";
+  let number = document.querySelectorAll(".setNum");
+  number[0].value = "";
+  number[1].value = "";
 }
