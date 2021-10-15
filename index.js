@@ -58,11 +58,9 @@ function inNOutArea(area, value) {
 }
 
 function setColor(area, i) {
-  const dou = document.getElementById(area)
-    ? document.getElementById(area)
-    : document.getElementsByClassName(area)[i];
-  dou.style.color = "blue";
-  dou.style.fontSize = "60px";
+  console.log(document.getElementById(area).children);
+  document.getElementById(area).children[i].style.color = "blue";
+  document.getElementById(area).children[i].style.fontSize = "60px";
 }
 //랜던 함수를 추출하는 메서드
 const setRandomNum = function (count, option, limit) {
@@ -144,7 +142,6 @@ async function insertNumber() {
   //위에 [3,1,2,0]의 공간값 저장배열이라면 [3(0이 3번째),1(1이 1번째),2(2가 2번째),0(3이 0번째)]
   //이 메서드를 통해 answerOrder를 정리
   returnIndex(setShowingAnswer.answerOrder);
-  console.log(returnIndex(setShowingAnswer.answerOrder));
   createNumberBox();
   setArrow();
   changeText("textPop", "정답은???");
@@ -153,10 +150,10 @@ async function insertNumber() {
   showNhideArea("answerView", "block");
   showNhideArea("setNumArea", "none");
   showNhideArea("collect", "block");
-  await asyncMethod();
+  await closeAnswer();
   //이 후 answerOrder을 정리하는 함수의 리턴 값을 이용해 seTime함수를 실행
   for (let i in setShowingAnswer.answerOrder) {
-    await setTime(
+    await asyncSetColor(
       setShowingAnswer.boxValueOrder[
         returnIndex(setShowingAnswer.answerOrder)[i]
       ]
@@ -164,8 +161,7 @@ async function insertNumber() {
   }
   console.log(setShowingAnswer);
 }
-/** 안되는 부분 ( 닫게 만들어주는 메서드와 함께 문제가 있는 setTime이란 메서드를 붙임 setTime은 정답의 숫자글씨를 파란색으로 보여줌(setForBlue),이후 returnOrigin을 통해 검은 색의 글씨로 바꿔줌  ) */
-function asyncMethod() {
+function closeAnswer() {
   return new Promise((resolve) => {
     setTimeout(function () {
       closePopup("pop");
@@ -188,7 +184,7 @@ function returnIndex(array) {
 }
 
 //setimeout 질문사항
-function setTime(i) {
+function asyncSetColor(i) {
   return new Promise((resolve) => {
     setTimeout(function () {
       setColor("box", i);
@@ -206,7 +202,6 @@ function returnOrigin(i) {
     }, 300)
   );
 }
-//리턴한건 처음에 then을 썻는데 거기에 프라미스 결과값이 없어서 안나오나 해서 retunr값을 붙여봄
 
 //처음에 submit 할때 boxRowCol 입력한 값을 넣게 했으나 정규식 확인을 효율적으로 할 수 있어 keyup 에 넣음
 function checkNum(index) {
@@ -257,9 +252,6 @@ function regexNumber(value) {
   return value;
 }
 
-//랜덤으로 num.question을 STORE_num에 배치,, 이후 boxValue에서 공간값 순서로 숫자li에 배치
-//메서드 진행은 NUM.question의 복제 배열이 모두 null되면 끝남
-//상자 생성
 function createNumberBox() {
   var li = document.getElementById("box").getElementsByTagName("li");
   for (var i = 0; i < boxValue.length; i++) {
