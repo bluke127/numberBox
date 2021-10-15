@@ -39,42 +39,36 @@ function changeText(area, text, i) {
   if (!i) {
     i = 0;
   }
-  document.getElementById(area)
-    ? (document.getElementById(area).innerText = text)
-    : (document.getElementsByClassName(area)[i].innerText = text);
+  const dou = document.getElementById(area)
+    ? document.getElementById(area)
+    : document.getElementsByClassName(area)[i];
+  dou.innerText = text;
 }
 function showNhideArea(area, flag) {
-  console.log(
-    document.getElementById(area),
-    document.getElementsByClassName(area)[0],
-    flag
-  );
-  document.getElementById(area)
-    ? (document.getElementById(area).style.display = flag)
-    : (document.getElementsByClassName(area)[0].style.display = flag);
+  const dou = document.getElementById(area)
+    ? document.getElementById(area)
+    : document.getElementsByClassName(area)[0];
+  dou.style.display = flag;
 }
-function showNhideArea(area, flag) {
-  console.log(
-    document.getElementById(area),
-    document.getElementsByClassName(area)[0],
-    flag
-  );
-  document.getElementById(area)
-    ? (document.getElementById(area).style.display = flag)
-    : (document.getElementsByClassName(area)[0].style.display = flag);
+function inNOutArea(area, value) {
+  const dou = document.getElementById(area)
+    ? document.getElementById(area)
+    : document.getElementsByClassName(area)[0];
+  dou.style.right = value + "px";
 }
 
 function setColor(area, i) {
-  console.log(document.getElementById(area).children);
-  document.getElementById(area).children[i].style.color = "blue";
-  document.getElementById(area).children[i].style.fontSize = "60px";
+  const dou = document.getElementById(area)
+    ? document.getElementById(area)
+    : document.getElementsByClassName(area)[i];
+  dou.style.color = "blue";
+  dou.style.fontSize = "60px";
 }
 //랜던 함수를 추출하는 메서드
-/** 이 메서드를 쓰는 부분에서 질문, 10-11에 보낸 카톡 내용 */
 const setRandomNum = function (count, option, limit) {
-  console.log(count);
   let num = [];
   while (true) {
+    //중복 허용되고 리미트(값의 최대값)이 없을때
     if (!option.duplication && !limit) {
       let randomNum = Math.floor(Math.random() * 10);
       for (let i = 0; i < count; i++) {
@@ -82,6 +76,7 @@ const setRandomNum = function (count, option, limit) {
         num.push(randomNum);
       }
       break;
+      //중복 허용되고 리미트 값 없을때
     } else if (option.duplication && !limit) {
       let randomNum = Math.floor(Math.random() * 10);
       if (!num.includes(randomNum)) {
@@ -92,6 +87,7 @@ const setRandomNum = function (count, option, limit) {
       if (num.length === count) {
         break;
       }
+      //중복 허용되고 리미트 값 있을때
     } else if (option.duplication && limit) {
       let randomNum = Math.floor(Math.random() * 100) % limit;
       if (num.length < count) {
@@ -121,23 +117,34 @@ async function insertNumber() {
   rowNCol.push(row);
   rowNCol.push(col);
   let answerLength;
-  row > col ? (answerLength = row) : (answerLength = col);
   //큰 숫자 만큼 정답의 숫자 갯수가 정해짐!
-
+  row > col ? (answerLength = row) : (answerLength = col);
+  //랜덤숫자메서드를 중복가능하게 num.question을 만듬
   num.question = setRandomNum(row * col, { duplication: false });
+  //앞에 num.question 의 숫자들이 num.answer
   num.answer = num.question.slice(0, answerLength);
+  //중복을 허용하고 리미트를 둔 랜덤메서드를 구현하여 박스에 들어갈 값이 있는 boxValue에 들어갈 공간의 값을 설정
   let indexForStore = setRandomNum(row * col, { duplication: true }, row * col);
-  console.log(indexForStore);
+  /**순차적으로 글씨가 칠해지는 기능을 위한 작업/ answerOrder에는 박스에 넣은 값의 공간값을 저장!,
+   boxValueOrder은 해당 답변이 몇번째 박스에 있는지 저장
+   이때 치명적 문제가 있는데, num.aswer의 배열을 공간값 랜덤으로 상자에 넣었기 때문에 정답이 순서대로 보여지지 않음!
+   ex)[3,1,2,0] (answer.order) [7,1,9,5] 처음으로 들어간건 3번째 정답의 값이 7번째 상자에 들어갔다는 의미,,
+   맨처음에 보여질 정답은 3번째의 정답 값임으로 순서대로 정답을 입력해야하는 이 게임에 적합하지 않음
+   아래에 수정사항이 나옴,, 좀 복잡하게 푼 감도,,,
+  */
   for (let ii = 0; ii < row * col; ii++) {
     if (indexForStore[ii] < num.answer.length) {
       setShowingAnswer.boxValueOrder.push(ii);
       setShowingAnswer.answerOrder.push(indexForStore[ii]);
     }
+    //boxValue에 있는 값이 순서대로 박스에 들어감, boxValue에 들어가는 num.question의 순서는 indexForStore를 이용
     boxValue.push(num.question[indexForStore[ii]]);
   }
+  //이 메서드는 함수의 역할은 공간값을 저장하는 배열의 각 값의 index를 순서대로 정리해주는 메서드
+  //위에 [3,1,2,0]의 공간값 저장배열이라면 [3(0이 3번째),1(1이 1번째),2(2가 2번째),0(3이 0번째)]
+  //이 메서드를 통해 answerOrder를 정리
   returnIndex(setShowingAnswer.answerOrder);
-  console.log(returnIndex(setShowingAnswer.answerOrder), setShowingAnswer, "?");
-
+  console.log(returnIndex(setShowingAnswer.answerOrder));
   createNumberBox();
   setArrow();
   changeText("textPop", "정답은???");
@@ -147,12 +154,8 @@ async function insertNumber() {
   showNhideArea("setNumArea", "none");
   showNhideArea("collect", "block");
   await asyncMethod();
+  //이 후 answerOrder을 정리하는 함수의 리턴 값을 이용해 seTime함수를 실행
   for (let i in setShowingAnswer.answerOrder) {
-    console.log(
-      setShowingAnswer.boxValueOrder[
-        returnIndex(setShowingAnswer.answerOrder)[i]
-      ]
-    );
     await setTime(
       setShowingAnswer.boxValueOrder[
         returnIndex(setShowingAnswer.answerOrder)[i]
@@ -294,7 +297,7 @@ function getTryingAnswer(i) {
   //클로저변수를 이용해서 클릭할때마다 클로저의 변수는 ++, 이전에 answer와 입력한 값을 비교함
   //만일 사용자가 틀린 답을 입력할때,
   if (num.answer[answerIndex] !== userAnswer[answerIndex]) {
-    document.getElementById("result").style.right = 0 + "px";
+    inNOutArea("result", 0);
     alert("진실의 방으로");
     resultSrc = "./src/assets/img/punch.png";
     resultMessage = "한 판 더 하실?";
@@ -313,7 +316,7 @@ function getTryingAnswer(i) {
     num.answer[num.answer.length] === userAnswer[userAnswer.length] &&
     userAnswer.length === num.answer.length
   ) {
-    document.getElementById("result").style.right = 0 + "px";
+    inNOutArea("result", 0);
     resultSrc = "./src/assets/img/thumbsUp.png";
     resultMessage = "잇츠 굿~~~";
     //변수 초기화
@@ -335,26 +338,24 @@ const tryAnswer = function (c) {
 /**answer */
 function setArrow() {
   if (isAnswer === true) {
-    document.getElementById("answerInner").innerText = `>`;
+    changeText("answerInner", `>`);
     isAnswer = false;
   } else {
-    document.getElementById("answerInner").innerText = `<`;
+    changeText("answerInner", `<`);
     isAnswer = true;
   }
 }
 function showAnswer() {
-  document.getElementById("popUpWrap").style.right = 0 + "px";
+  inNOutArea("popUpWrap", 0);
   isAnswer === false;
   setArrow();
-  isAnswer === true;
 }
 function closePopup(flag) {
-  document.getElementById("result").style.right = -2999 + "px";
+  inNOutArea("result", -2999);
   if (flag === "pop" && isClosePop === true) {
-    document.getElementById("popUpWrap").style.right = -2999 + "px";
+    inNOutArea("popUpWrap", -2999);
   }
 }
-
 function retry() {
   num = { answer: [], question: [] };
   rowNCol = [];
@@ -371,9 +372,8 @@ function retry() {
   let isCol = false;
   let passRowNCol = [isRow, isCol];
   //에러 메세지를 저장해서, 오류 생기면 alert(errorMessage)
-  document.getElementById("popUpWrap").style.right = "0";
-  document.getElementById("textPop").innerText =
-    "상자의 열과 행을 입력해주세요";
+  inNOutArea("popUpWrap", 0);
+  changeText("textPop", "상자의 열과 행을 입력해주세요");
   showNhideArea("setNumArea", "block");
   showNhideArea("answerView", "none");
   showNhideArea("collect", "none");
