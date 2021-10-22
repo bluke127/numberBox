@@ -4,9 +4,6 @@ let rowNCol = [];
 let row = null;
 //열
 let col = null;
-//row와 col 중에 큰 수와 작은 수
-let bigger;
-let small;
 //정답의 숫자들을 하나하나를 배열로 담음
 let num = { answer: [], question: [] };
 //num.ques를 랜덤으로 담아줄, 또 순차적으로 li에 뿌려줄 배열
@@ -21,10 +18,6 @@ let isClosePop = false;
 let setShowingAnswer = { answerOrder: [], boxValueOrder: [] };
 //클릭시 화살표 모양 바뀌는 flag
 let isAnswer = false;
-//결과 img경로
-let resultSrc = "";
-//결과 message
-let resultMessage = "";
 //각 값이 모두 true때(입력한 값이 정상적일때) 게임 시작
 let isRow = false;
 let isCol = false;
@@ -244,7 +237,6 @@ function regexNumber(value) {
   }
   //숫자면 value를 그대로 리턴
   return value;
-}
 
 function createNumberBox() {
   var li = document.getElementById("box").getElementsByTagName("li");
@@ -271,15 +263,19 @@ function createNumberBox() {
   for (var i = 0; i < li.length; i++) {
     BOX_ELEMENT[i].style.width = 500 / row + "px";
     BOX_ELEMENT[i].style.height = 500 / row + "px";
-    BOX_ELEMENT[i].style.fontSize = 60 / (small / 2) + "px";
+    BOX_ELEMENT[i].style.fontSize = 60 / (row / 2) + "px";
     BOX_ELEMENT[i].style.lineHeight = 500 / row + "px";
   }
 }
 //사용자가 클릭한 숫자를 userAnswer배열에 넣는 메서드
 function getTryingAnswer(i) {
   userAnswer.push(boxValue[i]);
-  var li = document.getElementById("collection");
-  var resultText = document.getElementById("resultText");
+  let li = document.getElementById("collection");
+  let resultText = document.getElementById("resultText");
+  //결과 img경로
+  let resultSrc = "";
+  //결과 message
+  let resultMessage = "";
   //클로저변수를 이용해서 클릭할때마다 클로저의 변수는 ++, 이전에 answer와 입력한 값을 비교함
   //만일 사용자가 틀린 답을 입력할때,
   if (num.answer[answerIndex] !== userAnswer[answerIndex]) {
@@ -293,7 +289,7 @@ function getTryingAnswer(i) {
     li.innerText = "";
     //맞게 입력하면 closure ++할 메서드 실행! 선택한 숫자에는 입력한 숫자게 계속 들어감
   } else {
-    var text = [...userAnswer];
+    let text = [...userAnswer];
     li.innerText = text;
     tryAnswer(answerIndex);
   }
