@@ -234,7 +234,7 @@ function regexNumber(value) {
   }
   //숫자면 value를 그대로 리턴
   return value;
-
+}
 function createNumberBox(array) {
   let li = document.getElementById("box").getElementsByTagName("li");
   for (var i = 0; i < array.length; i++) {
