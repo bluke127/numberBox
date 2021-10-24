@@ -41,7 +41,6 @@ function inNOutArea(area, value) {
 }
 
 function setColor(area, i) {
-  console.log(document.getElementById(area).children);
   document.getElementById(area).children[i].style.color = "blue";
   document.getElementById(area).children[i].style.fontSize = "60px";
 }
@@ -73,14 +72,11 @@ const setRandomNum = function (count, option, limit) {
       let randomNum = Math.floor(Math.random() * 100) % limit;
       if (num.length < count) {
         if (num.includes(randomNum % limit)) {
-          console.log(num.length, count, num, limit, "yes");
           continue;
         } else if (!num.includes(randomNum % limit)) {
-          console.log("no");
           num.push(randomNum % limit);
         }
       } else {
-        console.log("break");
         break;
       }
     }
@@ -147,7 +143,6 @@ async function insertNumber() {
       ]
     );
   }
-  console.log(setShowingAnswer);
 }
 function closeAnswer() {
   return new Promise((resolve) => {
@@ -171,7 +166,6 @@ function returnIndex(array) {
   return newA;
 }
 
-//setimeout 질문사항
 function asyncSetColor(i) {
   return new Promise((resolve) => {
     setTimeout(function () {
@@ -240,7 +234,6 @@ function regexNumber(value) {
   }
   //숫자면 value를 그대로 리턴
   return value;
-}
 
 function createNumberBox(array) {
   let li = document.getElementById("box").getElementsByTagName("li");
