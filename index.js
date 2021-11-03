@@ -9,8 +9,6 @@ let num = { answer: [], question: [] };
 //상황에 따라 팝업을 닫고 열어주는 전역변수
 //팝업을 닫아줄 변수
 let isClosePop = false;
-//클릭시 화살표 모양 바뀌는 flag
-let isAnswer = false;
 //각 값이 모두 true때(입력한 값이 정상적일때) 게임 시작
 //0번째는 row의 pass 조건, 1번째는 col의 pass 조건
 let passRowNCol = [false, false];
@@ -25,6 +23,7 @@ function changeText(area, text, i) {
   const dou = document.getElementById(area)
     ? document.getElementById(area)
     : document.getElementsByClassName(area)[i];
+    console.log(dou,text)
   dou.innerText = text;
 }
 function showNhideArea(area, flag) {
@@ -156,13 +155,13 @@ function closeAnswer() {
 //new) 어떤 공간값을 담은 배열 속에 값들을 0부터 배열의 길이의 값이 있는 공간값을 저장 ex)[2,0,1]=>[1,2,0]
 function returnIndex(array) {
   let newA = [];
-  for (let z = 0; z < array.length; z++) {
+  array.forEach ((value,index)=>{
     for (let v in array) {
-      if (array[v] === z) {
+      if (array[v] === index) {
         newA.push(v);
       }
     }
-  }
+  })
   return newA;
 }
 
@@ -313,7 +312,10 @@ const getTryingAnswer = (function () {
   };
 })();
 /**answer */
-function setArrow() {
+function setArrow(){
+  (function(){
+//클릭시 화살표 모양 바뀌는 flag
+let isAnswer = false;
   if (isAnswer === true) {
     changeText("answerInner", `>`);
     isAnswer = false;
@@ -321,12 +323,8 @@ function setArrow() {
     changeText("answerInner", `<`);
     isAnswer = true;
   }
-}
-function showAnswer() {
-  inNOutArea("popUpWrap", 0);
-  isAnswer === false;
-  setArrow();
-}
+})()
+};
 function closePopup(flag) {
   inNOutArea("result", -2999);
   if (flag === "pop" && isClosePop === true) {
